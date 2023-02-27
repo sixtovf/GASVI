@@ -2,6 +2,9 @@ package com.example.gasvi;
 
 import android.os.Bundle;
 
+import com.chaquo.python.PyObject;
+import com.chaquo.python.Python;
+import com.chaquo.python.android.AndroidPlatform;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private SecondaryActivity secondaryActivity = new SecondaryActivity();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                pythonScript();
             }
         });
     }
@@ -72,5 +75,22 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void pythonScript() {
+        System.out.println("hola");
+        if(!Python.isStarted()){
+            Python.start(new AndroidPlatform(getApplicationContext()));
+        }
+
+        Python py = Python.getInstance();
+
+        PyObject pyobject = py.getModule("GASVI.py");
+
+        try{
+            pyobject.callAttrThrows("funcion");
+        }catch (Throwable e) {
+
+        }
     }
 }
